@@ -25,18 +25,6 @@ class Customer:
     def intID(self):
         return self.__intID
 
-    @property
-    def strRentalBasis(self):
-        return self.__strRentalBasis
-
-    @property
-    def fltRentalTime(self):
-        return self.__fltRentalTime
-
-    @property
-    def intRentalQuantity(self):
-        return self.__intRentalQuantity
-
     @strName.setter
     def strName(self, strValue):
         if strValue == "":
@@ -56,47 +44,50 @@ class Customer:
         except ValueError:
             raise Exception("intID should be a whole number")
 
-    @strRentalBasis.setter
-    def strRentalBasis(self, strValue):
-        if strValue == "Hourly" or strValue == "hourly":
-            self.__strRentalBasis = "Hourly"
-        elif strValue == "Daily" or strValue == "daily":
-            self.__strRentalBasis = "Daily"
-        elif strValue == "Weekly" or strValue == "weekly":
-            self.__strRentalBasis = "Weekly"
-        else:
-            raise Exception("strRentalBasis must be Hourly, Daily, or Weekly")
-
-    @fltRentalTime.setter
-    def fltRentalTime(self, fltValue):
-        try:
-            fltValue = float(fltValue)
-
-            if fltValue < 0:
-                raise Exception("fltRentalTime should be 0 or greater")
-            else:
-                self.__fltRentalTime = fltValue
-        except ValueError:
-            raise Exception("fltRentalTime should be a number")
-
-    @intRentalQuantity.setter
-    def intRentalQuantity(self, intValue):
-        try:
-            intValu = int(intValue)
-
-            if intValue < 0:
-                raise Exception("intRentalQuantity should be 0 or greater")
-            else:
-                self.__intRentalQuantity = intValue
-        except ValueError:
-            raise Exception("intRentalQuantity should be a number")
-
 
 
 class Shop:
     def __init__(self):
         Ski = Skis()
         Snowboard = Snowboards()
+        self.fltHoursInDay = 10
+        self.intDaysInWeek = 7
+
+    @property 
+    def fltHoursInDay(self):
+        return self.__fltHoursInDay 
+
+    @property 
+    def intDaysInWeek(self):
+        return self.__intDaysInWeek
+
+    @fltHoursInDay.setter
+    def fltHoursInDay(self, fltValue):
+        try:
+            fltValue = float(fltValue)
+
+            if fltValue < 0:
+                raise Exception("fltHoursInDay must be 0 or greater")
+            elif fltValue > 24:
+                raise Exception("fltHoursInDay must be 24 or less")
+            else:
+                self.__fltHoursInDay = fltValue
+        except ValueError:
+            raise Exception("fltHoursInDay must be a number")
+
+    @intDaysInWeek.setter
+    def intDaysInWeel(self, intValue):
+        try:
+            intValue = int(intValue)
+
+            if intValue < 0:
+                raise Exception("intDaysInWeek must be 0 or greater")
+            elif intValue > 7:
+                raise Exception("intDaysInWeek must be 7 ir less")
+            else:
+                self.__intDaysInWeek = intValue 
+        except ValueError:
+            raise Exception("intDaysInWeek must be a whole number")
 
     def Display_Inventory(self):
         Skis.Display_Inventory()
@@ -106,6 +97,11 @@ class Shop:
 
 
 class Equipment:
+    intInventory = 0
+    fltHourlyRate = 0
+    fltDailyRate = 0
+    fltWeeklyRate = 0
+
     def __init__(self):
         pass
     
@@ -148,6 +144,10 @@ class Equipment:
 
 
 class Skis(Equipment):
+    fltHourlyRate = 15
+    fltDailyRate = 50
+    fltWeeklyRate = 200
+
     def __init__(self, intQuantity = None):
         Equipment.__init__(self)
 
@@ -179,6 +179,10 @@ class Skis(Equipment):
 
 
 class Snowboards(Equipment):
+    fltHourlyRate = 10
+    fltDailyRate = 40
+    fltWeeklyRate = 160
+
     def __init__(self, intQuantity = None):
         Equipment.__init__(self)
 
@@ -206,6 +210,142 @@ class Snowboards(Equipment):
 
     def Display_Inventory():
         print("\tSnowboards on hand:", Snowboards.intInventory)
+
+
+
+class Rental:
+    def __init__(self, instCustomer, clsEquipment, strRentalBasis, fltRentalTime, intRentalQuantity, strCheckoutCode = None):
+        self.instCustomer = instCustomer
+        self.clsEquipment = clsEquipment
+        self.strRentalBasis = strRentalBasis
+        self.fltRentalTime = fltRentalTime 
+        self.intRentalQuantity = intRentalQuantity
+        self.strCheckoutCode = strCheckoutCode
+        self.blnActive = False
+
+    @property
+    def strRentalBasis(self):
+        return self.__strRentalBasis
+
+    @property
+    def fltRentalTime(self):
+        return self.__fltRentalTime
+
+    @property
+    def intRentalQuantity(self):
+        return self.__intRentalQuantity
+
+    @property
+    def strCheckoutCode(self):
+        return self.__strCheckoutCode
+
+    @property 
+    def blnActive(self):
+        return self.__blnActive 
+
+    @strRentalBasis.setter
+    def strRentalBasis(self, strValue):
+        if strValue == "Hourly" or strValue == "hourly":
+            self.__strRentalBasis = "Hourly"
+        elif strValue == "Daily" or strValue == "daily":
+            self.__strRentalBasis = "Daily"
+        elif strValue == "Weekly" or strValue == "weekly":
+            self.__strRentalBasis = "Weekly"
+        else:
+            raise Exception("strRentalBasis must be Hourly, Daily, or Weekly")
+
+    @fltRentalTime.setter
+    def fltRentalTime(self, fltValue):
+        try:
+            fltValue = float(fltValue)
+
+            if fltValue < 0:
+                raise Exception("fltRentalTime must be 0 or greater")
+            else:
+                self.__fltRentalTime = fltValue
+        except ValueError:
+            raise Exception("fltRentalTime must be a number")
+
+    @intRentalQuantity.setter
+    def intRentalQuantity(self, intValue):
+        try:
+            intValue = int(intValue)
+
+            if intValue < 0:
+                raise Exception("intRentalQuantity must be 0 or greater")
+            else:
+                self.__intRentalQuantity = intValue
+        except ValueError:
+            raise Exception("intRentalQuantity must be a number")
+
+    @strCheckoutCode.setter 
+    def strCheckoutCode(self, strValue):
+        strValue = str(strValue)
+        self.__strCheckoutCode = strValue
+
+    @blnActive.setter 
+    def blnActive(self, blnValue):
+        blnValue = bool(blnValue)
+        self.__blnActive = blnValue
+
+    def Quote_Rental(self, strRentalBasis = None):
+        if strRentalBasis != "Hourly" and strRentalBasis != "Daily" and strRentalBasis != "Weekly":
+            strRentalBasis = None
+
+        if strRentalBasis == None:
+            strRentalBasis = self.strRentalBasis
+
+        if strRentalBasis == "Hourly":
+            return self.clsEquipment.fltHourlyRate * self.fltRentalTime
+        elif strRentalBasis == "Daily":
+            return self.clsEquipment.fltDailyRate * self.fltRentalTime
+        else:
+            return self.clsEquipment.fltWeeklyRate * self.fltRentalTime
+
+    def Start_Rental(self):
+        blnRentalSuccess = True
+        intInventory = self.clsEquipment.intInventory
+
+        if self.blnActive:
+            blnRentalSuccess = False
+            print("This rental is already active!")
+
+        if intInventory == 0:
+            blnRentalSuccess = False
+            print("There's no more equpiment to rent! Come back later to request a rental")
+
+        if intInventory - self.intRentalQuantity < 0:
+            blnRentalSuccess = False 
+            print("Rental quantity is larger than the equipment available! Current maximum rental request is", intInventory)
+
+        if blnRentalSuccess:
+            self.clsEquipment.Reduce_Inventory(self.intRentalQuantity)
+            self.blnActive = True
+
+    def Checkout(self):
+        if self.blnActive:
+            fltTotal = 0
+
+            if self.strRentalBasis == "Hourly":
+                fltTotal = self.Quote_Rental
+
+                if fltTotal > self.Quote_Rental("Weekly"):
+                    pass
+                elif fltTotal > self.Quote_Rental("Daily"):
+                    pass
+
+            if self.strRentalBasis == "Daily":
+                pass
+
+            if self.strRentalBasis == "Weekly":
+                pass
+
+        else:
+            print("This rental is not active!")
+
+
+
+
 
 # --------------------
 # Function Area
