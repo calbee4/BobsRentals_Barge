@@ -4,14 +4,13 @@
 # ------------------------------
 
 from datetime import datetime, timedelta
-from typing import Self
 
 # --------------------
 # Class Area
 # --------------------
 
 class Customer:
-    def __init__(self, strName, intID, strRentalBasis = None, fltRentalTime = None, intRentalQuantity = None):
+    def __init__(self, strName, intID, strRentalBasis = "", fltRentalTime = 0, intRentalQuantity = 0):
         self.strName = strName
         self.intID = intID
         self.__strRentalBasis = strRentalBasis
@@ -94,18 +93,126 @@ class Customer:
 
 
 
+class Shop:
+    def __init__(self):
+        Ski = Skis()
+        Snowboard = Snowboards()
+
+    def Display_Inventory(self):
+        print("Total equipment on hand:", Equipment.intInventory)
+        print("\tSkis on hand:", Skis.intInventory)
+        print("\tSnowboards on hand:", Snowboards.intInventory)
+        print()
+
+
+
+class Equipment:
+    intInventory = 0
+
+    def __init__(self):
+        pass
+    
+    def Set_Inventory(self, intAmount):
+        if intAmount < 0:
+            Equipment.intInventory = 0
+        else:
+            Equipment.intInventory = intAmount
+
+
+
+class Skis(Equipment):
+    def __init__(self, intQuantity = None):
+        Equipment.__init__(self)
+
+        if intQuantity:
+            Skis.intInventory = intQuantity
+        else:
+            Skis.intInventory = Get_Valid_Integer("How much inventory is there for Skis today?: ", intRangeMin = 0)
+
+        Equipment.intInventory += Skis.intInventory
+
+
+
+
+class Snowboards(Equipment):
+    def __init__(self, intQuantity = None):
+        Equipment.__init__(self)
+
+        if intQuantity:
+            Snowboards.intInventory = intQuantity
+        else:
+            Snowboards.intInventory = Get_Valid_Integer("How much inventory is there for Snowboards today?: ", intRangeMin = 0)
+
+        Equipment.intInventory += Snowboards.intInventory
 
 
 # --------------------
 # Function Area
 # --------------------
 
+
+
+# ------------------------------
+# Function Name: Validate Integer
+# Function Purpose: Validate an integer, within an optional inclusive range.
+# ------------------------------
+def Validate_Integer(intInput, intRangeMax = None, intRangeMin = None):
+    if intRangeMin != None and intRangeMax != None:
+        if intRangeMax < intRangeMin:
+            intRangeMax = intRangeMin
+
+    try:
+        intInput = int(intInput)
+        if intRangeMax != None and intInput > intRangeMax:
+            print("Maximum input must be less than", intRangeMax + 1)
+        elif intRangeMin != None and intInput < intRangeMin:
+            print("Minimum input must be", intRangeMin, "or greater")
+        else:
+            global blnValidated
+            blnValidated = True
+    except ValueError:
+        intInput = int(0)
+        strOutput = "Input must be a whole number"
+
+        if intRangeMin != None:
+            strOutput += ", minimum " + str(intRangeMin)
+
+        if intRangeMax != None:
+            strOutput += ", maximum " + str(intRangeMax)
+
+        print(strOutput)
+    return intInput
+
+
+
+# ------------------------------
+# Function Name: Get Valid Integer
+# Function Purpose: Yields the program until the user enters a valid integer. An optional inclusive range can be set.
+# ------------------------------
+def Get_Valid_Integer(strMessage, intRangeMax = None, intRangeMin = None):
+    intInput = int(0)
+    global blnValidated
+    while blnValidated is False:
+        intInput = input(strMessage)
+        intInput = Validate_Integer(intInput, intRangeMax, intRangeMin)
+    blnValidated = False
+    print()
+    return intInput
+
+
+
 # --------------------
 # Main Area
 # --------------------
 
+# --------------------
+# Global Variables
+# --------------------
+blnValidated = bool(False)
+
 def main():
-    pass
+    SnowShop = Shop()
+    SnowShop.Display_Inventory()
 
 main()
 
