@@ -99,24 +99,51 @@ class Shop:
         Snowboard = Snowboards()
 
     def Display_Inventory(self):
-        print("Total equipment on hand:", Equipment.intInventory)
-        print("\tSkis on hand:", Skis.intInventory)
-        print("\tSnowboards on hand:", Snowboards.intInventory)
-        print()
+        Skis.Display_Inventory()
+        Snowboards.Display_Inventory()
+        print("Total inventory")
 
 
 
 class Equipment:
-    intInventory = 0
-
     def __init__(self):
         pass
     
-    def Set_Inventory(self, intAmount):
-        if intAmount < 0:
-            Equipment.intInventory = 0
-        else:
-            Equipment.intInventory = intAmount
+    def Set_Inventory(Class, intAmount):
+        try:
+            intAmount = int(intAmount)
+
+            if intAmount < 0:
+                Class.intInventory = 0
+            else:
+                Class.intInventory = intAmount
+        except ValueError:
+            raise Exception("intAmount must be a number")
+
+    def Add_Inventory(Class, intAmount):
+        try:
+            intAmount = int(intAmount)
+
+            if intAmount < 0:
+                intAmount = 0
+            
+            Class.intInventory += intAmount
+        except ValueError:
+            raise Exception("intAmount must be a number")
+
+    def Reduce_Inventory(Class, intAmount):
+        try:
+            intAmount = int(intAmount)
+
+            if intAmount < 0:
+                intAmount = 0
+
+            if Class.intInventory - intAmount < 0:
+                print("Can't reduce inventory by " + str(intAmount) + ". Inventory is at " + str(Class.intInventory))
+            else:
+                Class.intInventory -= intAmount
+        except ValueError:
+            raise Exception("intAmount must be a number")
 
 
 
@@ -124,13 +151,30 @@ class Skis(Equipment):
     def __init__(self, intQuantity = None):
         Equipment.__init__(self)
 
-        if intQuantity:
-            Skis.intInventory = intQuantity
+        if intQuantity == None:
+            Skis.Request_Inventory()
         else:
-            Skis.intInventory = Get_Valid_Integer("How much inventory is there for Skis today?: ", intRangeMin = 0)
+            try:
+                intQuantity = int(intQuantity)
+                Skis.Set_Inventory(intQuantity)
+            except ValueError:
+                Skis.Request_Inventory()
 
-        Equipment.intInventory += Skis.intInventory
+    def Request_Inventory():
+        intQuantity = Get_Valid_Integer("How much inventory is there for Skis today?: ", intRangeMin = 0)
+        Skis.Set_Inventory(intQuantity)
 
+    def Set_Inventory(intAmount):
+        Equipment.Set_Inventory(Skis, intAmount)
+
+    def Add_Inventory(intAmount):
+        Equipment.Add_Inventory(Skis, intAmount)
+
+    def Reduce_Inventory(intAmount):
+        Equipment.Reduce_Inventory(Skis, intAmount)
+
+    def Display_Inventory():
+        print("\tSkis on hand:", Skis.intInventory)
 
 
 
@@ -138,13 +182,30 @@ class Snowboards(Equipment):
     def __init__(self, intQuantity = None):
         Equipment.__init__(self)
 
-        if intQuantity:
-            Snowboards.intInventory = intQuantity
+        if intQuantity == None:
+            Snowboards.Request_Inventory()
         else:
-            Snowboards.intInventory = Get_Valid_Integer("How much inventory is there for Snowboards today?: ", intRangeMin = 0)
+            try:
+                intQuantity = int(intQuantity)
+                Snowboards.Set_Inventory(intQuantity)
+            except ValueError:
+                Snowboards.Request_Inventory()
 
-        Equipment.intInventory += Snowboards.intInventory
+    def Request_Inventory():
+        intQuantity = Get_Valid_Integer("How much inventory is there for Snowboards today?: ", intRangeMin = 0)
+        Snowboards.Set_Inventory(intQuantity)
 
+    def Set_Inventory(intAmount):
+        Equipment.Set_Inventory(Snowboards, intAmount)
+
+    def Add_Inventory(intAmount):
+        Equipment.Add_Inventory(Snowboards, intAmount)
+
+    def Reduce_Inventory(intAmount):
+        Equipment.Reduce_Inventory(Snowboards, intAmount)
+
+    def Display_Inventory():
+        print("\tSnowboards on hand:", Snowboards.intInventory)
 
 # --------------------
 # Function Area
