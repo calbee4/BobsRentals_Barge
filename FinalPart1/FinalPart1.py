@@ -101,6 +101,8 @@ class Equipment:
     fltHourlyRate = 0
     fltDailyRate = 0
     fltWeeklyRate = 0
+    intInventoryRented = 0
+    fltProfitAccumulated = 0
 
     def __init__(self):
         pass
@@ -138,8 +140,20 @@ class Equipment:
                 print("Can't reduce inventory by " + str(intAmount) + ". Inventory is at " + str(Class.intInventory))
             else:
                 Class.intInventory -= intAmount
+                Class.intInventoryRented += intAmount
         except ValueError:
             raise Exception("intAmount must be a number")
+
+    def Accumulate_Profit(Class, fltAmount):
+        try:
+            fltAmount = float(fltAmount)
+
+            if fltAmount < 0:
+                fltAmount = 0
+
+            Class.fltProfitAccumulated += fltAmount
+        except ValueError:
+            raise Exception("fltAmount must be a number")
 
 
 
@@ -176,6 +190,9 @@ class Skis(Equipment):
     def Display_Inventory():
         print("\tSkis on hand:", Skis.intInventory)
 
+    def Accumulate_Profit(fltAmount):
+        Equipment.Accumulate_Profit(Skis, fltAmount)
+
 
 
 class Snowboards(Equipment):
@@ -210,6 +227,9 @@ class Snowboards(Equipment):
 
     def Display_Inventory():
         print("\tSnowboards on hand:", Snowboards.intInventory)
+
+    def Accumulate_Profit(fltAmount):
+        Equipment.Accumulate_Profit(Snowboards, fltAmount)
 
 
 
@@ -288,19 +308,34 @@ class Rental:
         blnValue = bool(blnValue)
         self.__blnActive = blnValue
 
-    def Quote_Rental(self, strRentalBasis = None):
+    def Quote_Rental(self, strRentalBasis = None, fltRentalTime = None):
+        fltPrice = 0
+
         if strRentalBasis != "Hourly" and strRentalBasis != "Daily" and strRentalBasis != "Weekly":
             strRentalBasis = None
 
         if strRentalBasis == None:
             strRentalBasis = self.strRentalBasis
 
+        try:
+            fltRentalTime = float(fltRentalTime)
+        except ValueError:
+            fltRentalTime = None
+
+        if fltRentalTime == None:
+            fltRentalTime = self.fltRentalTime
+
         if strRentalBasis == "Hourly":
-            return self.clsEquipment.fltHourlyRate * self.fltRentalTime
+            fltPrice = self.clsEquipment.fltHourlyRate * fltRentalTime
         elif strRentalBasis == "Daily":
-            return self.clsEquipment.fltDailyRate * self.fltRentalTime
+            fltPrice =  self.clsEquipment.fltDailyRate * fltRentalTime
         else:
-            return self.clsEquipment.fltWeeklyRate * self.fltRentalTime
+            fltPrice = self.clsEquipment.fltWeeklyRate * fltRentalTime
+
+        if self.intRentalQuantity >= 3 and self.intRentalQuantity <= 5:
+            fltPrice *= .75
+
+        return fltPrice
 
     def Start_Rental(self):
         blnRentalSuccess = True
@@ -327,19 +362,31 @@ class Rental:
             fltTotal = 0
 
             if self.strRentalBasis == "Hourly":
-                fltTotal = self.Quote_Rental
+                fltTotal = self.Quote_Rental()
 
-                if fltTotal > self.Quote_Rental("Weekly"):
-                    pass
-                elif fltTotal > self.Quote_Rental("Daily"):
-                    pass
+                if fltTotal > self.Quote_Rental("Weekly", 1):
+                    fltTotal = self.Quote_Rental("Weeekly", 1)
+                elif fltTotal > self.Quote_Rental("Daily", 1):
+                    fltTotal = self.Quote_Rental("Daily", 1)
 
             if self.strRentalBasis == "Daily":
-                pass
+                fltTotal = self.Quote_Rental()
+
+                if fltTotal > self.Quote_Rental("Weekly", 1):
+                    fltTotal = self.Quote_Rental("Weeekly", 1)
 
             if self.strRentalBasis == "Weekly":
-                pass
+                fltTotal = self.Quote_Rental()
 
+            self.clsEquipment.Accumulate_Profit(fltTotal)
+        else:
+            print("This rental is not active!")
+
+    def Return_Rental(self):
+        if self.blnActive:
+            self.blnActive = False 
+
+            self.clsEquipment.Add_Inventory(self.intRentalQuantity)
         else:
             print("This rental is not active!")
 
