@@ -44,6 +44,9 @@ class Customer:
 
 
 class Shop:
+    intInventoryRented = 0
+    fltProfitAccumulated = 0
+
     def __init__(self):
         Ski = Skis()
         Snowboard = Snowboards()
@@ -90,6 +93,17 @@ class Shop:
         Skis.Display_Inventory()
         Snowboards.Display_Inventory()
 
+    def Accumulate_Profit(fltAmount):
+        try:
+            fltAmount = float(fltAmount)
+
+            if fltAmount < 0:
+                fltAmount = 0
+
+            Shop.fltProfitAccumulated += fltAmount
+        except ValueError:
+            raise Exception("fltAmount must be a number")
+
 
 
 class Equipment:
@@ -97,8 +111,6 @@ class Equipment:
     fltHourlyRate = 0
     fltDailyRate = 0
     fltWeeklyRate = 0
-    intInventoryRented = 0
-    fltProfitAccumulated = 0
 
     def __init__(self):
         pass
@@ -136,20 +148,9 @@ class Equipment:
                 print("Can't reduce inventory by " + str(intAmount) + ". Inventory is at " + str(Class.intInventory))
             else:
                 Class.intInventory -= intAmount
-                Class.intInventoryRented += intAmount
+                Shop.intInventoryRented += intAmount
         except ValueError:
             raise Exception("intAmount must be a number")
-
-    def Accumulate_Profit(Class, fltAmount):
-        try:
-            fltAmount = float(fltAmount)
-
-            if fltAmount < 0:
-                fltAmount = 0
-
-            Class.fltProfitAccumulated += fltAmount
-        except ValueError:
-            raise Exception("fltAmount must be a number")
 
 
 
@@ -186,9 +187,6 @@ class Skis(Equipment):
     def Display_Inventory():
         print("\tSkis on hand:", Skis.intInventory)
 
-    def Accumulate_Profit(fltAmount):
-        Equipment.Accumulate_Profit(Skis, fltAmount)
-
 
 
 class Snowboards(Equipment):
@@ -223,9 +221,6 @@ class Snowboards(Equipment):
 
     def Display_Inventory():
         print("\tSnowboards on hand:", Snowboards.intInventory)
-
-    def Accumulate_Profit(fltAmount):
-        Equipment.Accumulate_Profit(Snowboards, fltAmount)
 
 
 
@@ -377,7 +372,7 @@ class Rental:
             if self.strRentalBasis == "Weekly":
                 fltTotal = self.Quote_Rental()
 
-            self.clsEquipment.Accumulate_Profit(fltTotal)
+            Shop.Accumulate_Profit(fltTotal)
 
             return fltTotal
         else:
