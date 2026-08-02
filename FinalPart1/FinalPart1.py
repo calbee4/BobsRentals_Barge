@@ -10,12 +10,9 @@ from datetime import datetime, timedelta
 # --------------------
 
 class Customer:
-    def __init__(self, strName, intID, strRentalBasis = "", fltRentalTime = 0, intRentalQuantity = 0):
+    def __init__(self, strName, intID):
         self.strName = strName
         self.intID = intID
-        self.__strRentalBasis = strRentalBasis
-        self.__fltRentalTime = fltRentalTime
-        self.__intRentalQuantity = intRentalQuantity
 
     @property
     def strName(self):
@@ -379,6 +376,8 @@ class Rental:
                 fltTotal = self.Quote_Rental()
 
             self.clsEquipment.Accumulate_Profit(fltTotal)
+
+            return fltTotal
         else:
             print("This rental is not active!")
 
@@ -461,6 +460,8 @@ blnValidated = bool(False)
 def main():
     SnowShop = Shop()
     SnowShop.Display_Inventory()
+
+    Customer1 = Customer("Bob", 1, )
 
 main()
 
