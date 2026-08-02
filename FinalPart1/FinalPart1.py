@@ -329,7 +329,7 @@ class Rental:
         else:
             fltPrice = self.clsEquipment.fltWeeklyRate
 
-        fltPrice *= self.fltRentalTime * self.intRentalQuantity
+        fltPrice *= fltRentalTime * self.intRentalQuantity
 
         if self.intRentalQuantity >= 3 and self.intRentalQuantity <= 5:
             fltPrice *= .75
@@ -464,10 +464,11 @@ def main():
     SnowShop.Display_Inventory()
 
     Customer1 = Customer("Bob", 1)
-    Customer1_Rental = Rental(Customer1, Skis, "Hourly", 2, 10)
+    Customer1_Rental = Rental(Customer1, Snowboards, "Hourly", 5, 1)
     Customer1_Rental.Start_Rental()
     SnowShop.Display_Inventory()
     print(Customer1_Rental.Quote_Rental())
+    print(Customer1_Rental.Checkout())
 
 main()
 
