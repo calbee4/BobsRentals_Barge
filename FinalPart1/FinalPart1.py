@@ -344,11 +344,11 @@ class Rental:
             blnRentalSuccess = False
             print("This rental is already active!")
 
-        if intInventory == 0:
+        if intInventory == 0 and blnRentalSuccess:
             blnRentalSuccess = False
             print("There's no more equpiment to rent! Come back later to request a rental")
 
-        if intInventory - self.intRentalQuantity < 0:
+        if intInventory - self.intRentalQuantity < 0 and blnRentalSuccess:
             blnRentalSuccess = False 
             print("Rental quantity is larger than the equipment available! Current maximum rental request is", intInventory)
 
@@ -464,11 +464,14 @@ def main():
     SnowShop.Display_Inventory()
 
     Customer1 = Customer("Bob", 1)
-    Customer1_Rental = Rental(Customer1, Snowboards, "Hourly", 5, 1)
+    Customer1_Rental = Rental(Customer1, Snowboards, "Hourly", 5, 4)
     Customer1_Rental.Start_Rental()
     SnowShop.Display_Inventory()
     print(Customer1_Rental.Quote_Rental())
     print(Customer1_Rental.Checkout())
+    Customer1_Rental.Start_Rental()
+    Customer1_Rental.Return_Rental()
+    SnowShop.Display_Inventory()
 
 main()
 
