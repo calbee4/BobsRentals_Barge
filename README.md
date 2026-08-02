@@ -20,6 +20,7 @@
       intID: A required integer.
 
  Shop Class:
+ 
     The Shop class contains running totals, such as the amount of equipment rented out all day and accumulated sales. It instantiates all the types of equipment.
     Class Properties:
       intInventoryRented: An integer that's used to keep track of all inventory rented through the day.
@@ -33,6 +34,7 @@
       Display Inventory: Displays the inventory from all the equipment.
 
  Equipment Class:
+ 
     The Equipment class contains all the information needed to create subclasses of other equipment.
     Class Properties:
       intInventory: An integer used to track the amount of inventory on hand for the equipment.
@@ -45,6 +47,7 @@
       Reduce Inventory(Class: class, intAmount: integer): Subtracts from the inventory of the provided Class (should be a subclass of Equipment) by intAmount. Any number < 0 is set to 0. rints a message if the reduced amount would make the inventory drop below 0.
 
  Skis Class:
+ 
     Skis class inherits the Equipment class and is used to manage the Skis.
     Class Properties:
       intInventory: Inherited from Equipment.
@@ -59,6 +62,7 @@
       Display Inventory: Display the inventory of Skis.
       
  Snowboards Class:
+ 
     Snowboard class inherits the Equipment class and is used to manage the Snowboards.
     Class Properties:
       intInventory: Inherited from Equipment.
@@ -73,6 +77,7 @@
       Display Inventory: Display the inventory of Snowboards.
       
  Rental Class:
+ 
     Rental class is used to manage each rental from each customer. Rentals can be reactivated for later use.
     Instance Properties:
       instCustomer: Required, must be a customer instance.
