@@ -73,7 +73,7 @@ class Shop:
             raise Exception("fltHoursInDay must be a number")
 
     @intDaysInWeek.setter
-    def intDaysInWeel(self, intValue):
+    def intDaysInWeek(self, intValue):
         try:
             intValue = int(intValue)
 
@@ -89,7 +89,6 @@ class Shop:
     def Display_Inventory(self):
         Skis.Display_Inventory()
         Snowboards.Display_Inventory()
-        print("Total inventory")
 
 
 
@@ -314,20 +313,23 @@ class Rental:
         if strRentalBasis == None:
             strRentalBasis = self.strRentalBasis
 
-        try:
-            fltRentalTime = float(fltRentalTime)
-        except ValueError:
-            fltRentalTime = None
+        if fltRentalTime != None:
+            try:
+                fltRentalTime = float(fltRentalTime)
+            except ValueError:
+                fltRentalTime = None
 
         if fltRentalTime == None:
             fltRentalTime = self.fltRentalTime
 
         if strRentalBasis == "Hourly":
-            fltPrice = self.clsEquipment.fltHourlyRate * fltRentalTime
+            fltPrice = self.clsEquipment.fltHourlyRate
         elif strRentalBasis == "Daily":
-            fltPrice =  self.clsEquipment.fltDailyRate * fltRentalTime
+            fltPrice =  self.clsEquipment.fltDailyRate
         else:
-            fltPrice = self.clsEquipment.fltWeeklyRate * fltRentalTime
+            fltPrice = self.clsEquipment.fltWeeklyRate
+
+        fltPrice *= self.fltRentalTime * self.intRentalQuantity
 
         if self.intRentalQuantity >= 3 and self.intRentalQuantity <= 5:
             fltPrice *= .75
@@ -461,7 +463,11 @@ def main():
     SnowShop = Shop()
     SnowShop.Display_Inventory()
 
-    Customer1 = Customer("Bob", 1, )
+    Customer1 = Customer("Bob", 1)
+    Customer1_Rental = Rental(Customer1, Skis, "Hourly", 2, 10)
+    Customer1_Rental.Start_Rental()
+    SnowShop.Display_Inventory()
+    print(Customer1_Rental.Quote_Rental())
 
 main()
 
