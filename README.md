@@ -10,8 +10,10 @@
  ------------------------------
 
  ------------------------------
-CLASSES:
-Customer Class:
+ CLASSES:
+ 
+ Customer Class:
+ 
     The Customer class contains rudimentary customer information, just their name and ID.
     Instance Properties:
       strName: A required string.
@@ -84,5 +86,5 @@ Customer Class:
       Quote Rental(strRentalBasis: string or None, fltRentalTime: float or None): Returns a rental quote useing the formula Equipment Rate of EquipmentBasis * EquipmentQuantity * RentalTime. The Rental Basis and the Rental Time can be set to compare different types of offerings for the customer.
       Start Rental: Checks if the requested items are in stock before activating the rental.
       Checkout: Compares the current rental total to the Weekly and Daily rental basis to see if the customer can save some money, before providing a total and deactivating the rental.
-#      Return Rental: Deactivates the rental and returns the inventory.
-# ------------------------------
+      Return Rental: Deactivates the rental and returns the inventory.
+ ------------------------------
