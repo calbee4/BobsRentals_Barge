@@ -10,8 +10,8 @@
  ------------------------------
 
  ------------------------------
- CLASSES:
- Customer Class:
+CLASSES:
+Customer Class:
     The Customer class contains rudimentary customer information, just their name and ID.
     Instance Properties:
       strName: A required string.
