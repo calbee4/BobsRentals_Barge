@@ -374,6 +374,8 @@ class Rental:
 
             Shop.Accumulate_Profit(fltTotal)
 
+            self.Return_Rental()
+
             return fltTotal
         else:
             print("This rental is not active!")
@@ -465,8 +467,10 @@ def main():
     print(Customer1_Rental.Quote_Rental())
     print(Customer1_Rental.Checkout())
     Customer1_Rental.Start_Rental()
-    Customer1_Rental.Return_Rental()
     SnowShop.Display_Inventory()
+    print(SnowShop.intInventoryRented)
+    Customer1_Rental.Checkout()
+    Skis.Display_Inventory()
 
 main()
 
