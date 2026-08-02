@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 # Class Area
 # --------------------
 
+# Customer class
+
 class Customer:
     def __init__(self, strName, intID):
         self.strName = strName
@@ -43,13 +45,20 @@ class Customer:
 
 
 
+# Shop class
+
 class Shop:
+    # Class properties
+
     intInventoryRented = 0
     fltProfitAccumulated = 0
 
     def __init__(self):
         Ski = Skis()
         Snowboard = Snowboards()
+
+        # Operating hours and days per week
+
         self.fltHoursInDay = 10
         self.intDaysInWeek = 7
 
@@ -89,10 +98,12 @@ class Shop:
         except ValueError:
             raise Exception("intDaysInWeek must be a whole number")
 
+    # Display Inventory: Displays the inventory from all of the equipment
     def Display_Inventory(self):
         Skis.Display_Inventory()
         Snowboards.Display_Inventory()
 
+    # Accumulate Profit: Adds to fltProfitAccumulated
     def Accumulate_Profit(fltAmount):
         try:
             fltAmount = float(fltAmount)
@@ -106,7 +117,11 @@ class Shop:
 
 
 
+# Equipment class
+
 class Equipment:
+    # Class properties
+
     intInventory = 0
     fltHourlyRate = 0
     fltDailyRate = 0
@@ -115,6 +130,7 @@ class Equipment:
     def __init__(self):
         pass
     
+    # Set Inventory: Sets the inventory of the provided Class (should be a subclass of Equipment) to intAmount. Any number < 0 is set to 0.
     def Set_Inventory(Class, intAmount):
         try:
             intAmount = int(intAmount)
@@ -126,6 +142,7 @@ class Equipment:
         except ValueError:
             raise Exception("intAmount must be a number")
 
+    # Add Inventory: Adds to the inventory of the provided Class (should be a subclass of Equipment) by intAmount. Any number < 0 is set to 0.
     def Add_Inventory(Class, intAmount):
         try:
             intAmount = int(intAmount)
@@ -137,6 +154,7 @@ class Equipment:
         except ValueError:
             raise Exception("intAmount must be a number")
 
+    # Reduce Inventory: Subtracts from the inventory of the provided Class (should be a subclass of Equipment) by intAmount. Any number < 0 is set to 0. Prints a message if the reduced amount would make the inventory drop below 0.
     def Reduce_Inventory(Class, intAmount):
         try:
             intAmount = int(intAmount)
@@ -145,7 +163,7 @@ class Equipment:
                 intAmount = 0
 
             if Class.intInventory - intAmount < 0:
-                print("Can't reduce inventory by " + str(intAmount) + ". Inventory is at " + str(Class.intInventory))
+                print("Can't reduce inventory by " + str(intAmount) + ". Inventory is currently at " + str(Class.intInventory))
             else:
                 Class.intInventory -= intAmount
                 Shop.intInventoryRented += intAmount
@@ -154,7 +172,11 @@ class Equipment:
 
 
 
+# Equipment class > Skis class
+
 class Skis(Equipment):
+    # Class properties
+
     fltHourlyRate = 15
     fltDailyRate = 50
     fltWeeklyRate = 200
@@ -162,6 +184,7 @@ class Skis(Equipment):
     def __init__(self, intQuantity = None):
         Equipment.__init__(self)
 
+        # If not instantiated with an inventory quantity, prompt the user to provide it.
         if intQuantity == None:
             Skis.Request_Inventory()
         else:
@@ -171,25 +194,34 @@ class Skis(Equipment):
             except ValueError:
                 Skis.Request_Inventory()
 
+    # Request Inventory: Prompts the user to set the daily inventory.
     def Request_Inventory():
         intQuantity = Get_Valid_Integer("How much inventory is there for Skis today?: ", intRangeMin = 0)
         Skis.Set_Inventory(intQuantity)
 
+    # Set Inventory: Inherited from super, but automatically passes the Skis class
     def Set_Inventory(intAmount):
         Equipment.Set_Inventory(Skis, intAmount)
 
+    # Add Inventory: Inherited from super, but automatically passes the Skis class.
     def Add_Inventory(intAmount):
         Equipment.Add_Inventory(Skis, intAmount)
 
+    # Reduce Inventory: Inherited from super, but automatically passes the Skis class.
     def Reduce_Inventory(intAmount):
         Equipment.Reduce_Inventory(Skis, intAmount)
 
+    # Display Inventory: Display the inventory of Skis.
     def Display_Inventory():
         print("\tSkis on hand:", Skis.intInventory)
 
 
 
+# Equipment class > Snowboards class
+
 class Snowboards(Equipment):
+    # Class properties
+
     fltHourlyRate = 10
     fltDailyRate = 40
     fltWeeklyRate = 160
@@ -197,6 +229,7 @@ class Snowboards(Equipment):
     def __init__(self, intQuantity = None):
         Equipment.__init__(self)
 
+        # If not instantiated with an inventory quantity, prompt the user to provide it.
         if intQuantity == None:
             Snowboards.Request_Inventory()
         else:
@@ -206,23 +239,30 @@ class Snowboards(Equipment):
             except ValueError:
                 Snowboards.Request_Inventory()
 
+    # Request Inventory: Prompts the user to set the daily inventory.
     def Request_Inventory():
         intQuantity = Get_Valid_Integer("How much inventory is there for Snowboards today?: ", intRangeMin = 0)
         Snowboards.Set_Inventory(intQuantity)
 
+    # Set Inventory: Inherited from super, but automatically passes the Snowboards class
     def Set_Inventory(intAmount):
         Equipment.Set_Inventory(Snowboards, intAmount)
 
+    # Add Inventory: Inherited from super, but automatically passes the Snowboards class
     def Add_Inventory(intAmount):
         Equipment.Add_Inventory(Snowboards, intAmount)
 
+    # Reduce Inventory: Inherited from super, but automatically passes the Snowboards class
     def Reduce_Inventory(intAmount):
         Equipment.Reduce_Inventory(Snowboards, intAmount)
 
+    # Display Inventory: Display the inventory of Snowboards.
     def Display_Inventory():
         print("\tSnowboards on hand:", Snowboards.intInventory)
 
 
+
+# Rental class
 
 class Rental:
     def __init__(self, instCustomer, clsEquipment, strRentalBasis, fltRentalTime, intRentalQuantity, strCheckoutCode = None):
@@ -299,24 +339,30 @@ class Rental:
         blnValue = bool(blnValue)
         self.__blnActive = blnValue
 
+    # Quote Rental: Returns a rental quote useing the formula Equipment Rate of EquipmentBasis * EquipmentQuantity * RentalTime. The Rental Basis and the Rental Time can be set to compare different types of offerings for the customer.
     def Quote_Rental(self, strRentalBasis = None, fltRentalTime = None):
         fltPrice = 0
 
+        # If strRentalBasis isn't recognized, set it to None
         if strRentalBasis != "Hourly" and strRentalBasis != "Daily" and strRentalBasis != "Weekly":
             strRentalBasis = None
 
+        # If strRentalBasis is None, use the one already on the rental
         if strRentalBasis == None:
             strRentalBasis = self.strRentalBasis
 
+        # If fltRentalTime is provided, validate it
         if fltRentalTime != None:
             try:
                 fltRentalTime = float(fltRentalTime)
             except ValueError:
                 fltRentalTime = None
 
+        # If fltRentalTime is None, use the one already on the rental
         if fltRentalTime == None:
             fltRentalTime = self.fltRentalTime
 
+        # Set the price to the equipment's rate per the rental basis
         if strRentalBasis == "Hourly":
             fltPrice = self.clsEquipment.fltHourlyRate
         elif strRentalBasis == "Daily":
@@ -324,13 +370,16 @@ class Rental:
         else:
             fltPrice = self.clsEquipment.fltWeeklyRate
 
+        # Multiply by the rental time and the quantity
         fltPrice *= fltRentalTime * self.intRentalQuantity
 
+        # If the rental quantity is 3-5 items, include a 25% discount
         if self.intRentalQuantity >= 3 and self.intRentalQuantity <= 5:
             fltPrice *= .75
 
         return fltPrice
 
+    # Start Rental: Checks if the requested items are in stock before activating the rental.
     def Start_Rental(self):
         blnRentalSuccess = True
         intInventory = self.clsEquipment.intInventory
@@ -351,6 +400,7 @@ class Rental:
             self.clsEquipment.Reduce_Inventory(self.intRentalQuantity)
             self.blnActive = True
 
+    # Checkout: Compares the current rental total to the Weekly and Daily rental basis to see if the customer can save some money, before providing a total and deactivating the rental.
     def Checkout(self):
         if self.blnActive:
             fltTotal = 0
@@ -380,6 +430,7 @@ class Rental:
         else:
             print("This rental is not active!")
 
+    # Return Rental: Deactivates the rental and returns the inventory.
     def Return_Rental(self):
         if self.blnActive:
             self.blnActive = False 
@@ -390,13 +441,9 @@ class Rental:
 
 
 
-
-
 # --------------------
 # Function Area
 # --------------------
-
-
 
 # ------------------------------
 # Function Name: Validate Integer
@@ -451,26 +498,80 @@ def Get_Valid_Integer(strMessage, intRangeMax = None, intRangeMin = None):
 # Main Area
 # --------------------
 
-# --------------------
 # Global Variables
-# --------------------
+
 blnValidated = bool(False)
 
+
+
+# Main
+
 def main():
+    # Make the shop
     SnowShop = Shop()
     SnowShop.Display_Inventory()
 
+    # Create first customer
     Customer1 = Customer("Bob", 1)
+
+    # Create Bob's Rental
     Customer1_Rental = Rental(Customer1, Snowboards, "Hourly", 5, 4)
+
+    # Start the rental
     Customer1_Rental.Start_Rental()
+
+    # How does it affect the inventory...?
     SnowShop.Display_Inventory()
+
+    # Print a quote (does not automatically switch to best deal)
     print(Customer1_Rental.Quote_Rental())
+
+    # Print a checkount (automatically switches to best deal)
     print(Customer1_Rental.Checkout())
+
+    # See if we can reactivate stored rentals
     Customer1_Rental.Start_Rental()
+
+    # Verify inventory
     SnowShop.Display_Inventory()
+
+    # Check if the double rental affects the accumulating rental count
     print(SnowShop.intInventoryRented)
+
+    # Check out
     Customer1_Rental.Checkout()
+
+    # Verify inventory
     Skis.Display_Inventory()
+
+    # Customer 2 walks in
+    Customer2 = Customer("Anne", 2)
+
+    # Check if we can make 2 rentals for her
+    Customer2_Rental1 = Rental(Customer2, Skis, "Daily", 2, 3)
+    Customer2_Rental2 = Rental(Customer2, Snowboards, "Daily", 2, 3)
+
+    # Customer 1 is greedy and starts his rental again
+    Customer1_Rental.Start_Rental()
+
+    # Start Customer 2's rental
+    Customer2_Rental1.Start_Rental()
+    Customer2_Rental2.Start_Rental()
+
+    # Check inventory
+    SnowShop.Display_Inventory()
+
+    # Checkout customer 1 so customer 2 can start their rental
+    Customer1_Rental.Checkout()
+    Customer2_Rental2.Start_Rental()
+
+    # How does this affect inventory?
+    SnowShop.Display_Inventory()
+
+    # Checkout customer 2
+    Customer2_Rental1.Checkout()
+    Customer2_Rental2.Checkout()
+
 
 main()
 
