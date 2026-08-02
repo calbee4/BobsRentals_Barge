@@ -9,7 +9,9 @@
 
  ------------------------------
  DESCRIPTION:
+ 
  Bobs Rentals is a program designed to simulate the experience of running a rental shop for snowboards and skis. It accurately keeps track of customer information, equipment inventory, and running totals of sales and rented equipment.
+ 
  ------------------------------
 
  ------------------------------
